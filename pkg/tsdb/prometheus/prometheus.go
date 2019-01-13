@@ -7,14 +7,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/opentracing/opentracing-go"
-
 	"net/http"
+
+        "github.com/opentracing/opentracing-go"
 
 	"github.com/grafana/grafana/pkg/components/null"
 	"github.com/grafana/grafana/pkg/log"
 	"github.com/grafana/grafana/pkg/models"
+	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/tsdb"
+	"github.com/grafana/grafana/pkg/util"
 	api "github.com/prometheus/client_golang/api"
 	apiv1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
@@ -67,10 +69,11 @@ func (e *PrometheusExecutor) getClient(dsInfo *models.DataSource) (apiv1.API, er
 	}
 
 	if dsInfo.BasicAuth {
+		p, _ := util.Decrypt(dsInfo.BasicAuthPassword, setting.SecretKey)
 		cfg.RoundTripper = basicAuthTransport{
 			Transport: e.Transport,
 			username:  dsInfo.BasicAuthUser,
-			password:  dsInfo.BasicAuthPassword,
+			password:  string(p),
 		}
 	}
 

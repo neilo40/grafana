@@ -49,7 +49,7 @@ type DataSource struct {
 	Database          string
 	BasicAuth         bool
 	BasicAuthUser     string
-	BasicAuthPassword string
+	BasicAuthPassword []byte
 	WithCredentials   bool
 	IsDefault         bool
 	JsonData          *simplejson.Json

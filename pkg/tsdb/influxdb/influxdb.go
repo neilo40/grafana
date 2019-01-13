@@ -126,7 +126,7 @@ func (e *InfluxDBExecutor) createRequest(dsInfo *models.DataSource, query string
 	req.Header.Set("User-Agent", "Grafana")
 
 	if dsInfo.BasicAuth {
-		req.SetBasicAuth(dsInfo.BasicAuthUser, dsInfo.BasicAuthPassword)
+		req.SetBasicAuth(dsInfo.BasicAuthUser, string(dsInfo.BasicAuthPassword))
 	}
 
 	if !dsInfo.BasicAuth && dsInfo.User != "" {
