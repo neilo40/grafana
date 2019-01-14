@@ -267,7 +267,7 @@ func convertModelToDtos(ds *m.DataSource) dtos.DataSource {
 		User:              ds.User,
 		BasicAuth:         ds.BasicAuth,
 		BasicAuthUser:     ds.BasicAuthUser,
-		BasicAuthPassword: ds.BasicAuthPassword,
+		BasicAuthPassword: string(ds.BasicAuthPassword),
 		WithCredentials:   ds.WithCredentials,
 		IsDefault:         ds.IsDefault,
 		JsonData:          ds.JsonData,

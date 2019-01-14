@@ -172,7 +172,7 @@ func (c *baseClientImpl) executeRequest(method, uriPath string, body []byte) (*h
 
 	if c.ds.BasicAuth {
 		clientLog.Debug("Request configured to use basic authentication")
-		req.SetBasicAuth(c.ds.BasicAuthUser, c.ds.BasicAuthPassword)
+		req.SetBasicAuth(c.ds.BasicAuthUser, string(c.ds.BasicAuthPassword))
 	}
 
 	if !c.ds.BasicAuth && c.ds.User != "" {

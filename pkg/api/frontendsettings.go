@@ -80,7 +80,7 @@ func (hs *HTTPServer) getFrontendSettingsMap(c *m.ReqContext) (map[string]interf
 
 		if ds.Access == m.DS_ACCESS_DIRECT {
 			if ds.BasicAuth {
-				dsMap["basicAuth"] = util.GetBasicAuthHeader(ds.BasicAuthUser, ds.BasicAuthPassword)
+				dsMap["basicAuth"] = util.GetBasicAuthHeader(ds.BasicAuthUser, string(ds.BasicAuthPassword))
 			}
 			if ds.WithCredentials {
 				dsMap["withCredentials"] = ds.WithCredentials

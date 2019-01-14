@@ -11,13 +11,14 @@ import (
 	"regexp"
 	"strings"
 
+        "github.com/opentracing/opentracing-go"
+
 	"golang.org/x/net/context/ctxhttp"
 
 	"github.com/grafana/grafana/pkg/log"
 	"github.com/grafana/grafana/pkg/models"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/tsdb"
-	"github.com/opentracing/opentracing-go"
 )
 
 type GraphiteExecutor struct {
@@ -149,7 +150,7 @@ func (e *GraphiteExecutor) createRequest(dsInfo *models.DataSource, data url.Val
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	if dsInfo.BasicAuth {
-		req.SetBasicAuth(dsInfo.BasicAuthUser, dsInfo.BasicAuthPassword)
+		req.SetBasicAuth(dsInfo.BasicAuthUser, string(dsInfo.BasicAuthPassword))
 	}
 
 	return req, err

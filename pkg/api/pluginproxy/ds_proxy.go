@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/opentracing/opentracing-go"
+        "github.com/opentracing/opentracing-go"
 
 	"github.com/grafana/grafana/pkg/log"
 	m "github.com/grafana/grafana/pkg/models"
@@ -155,7 +155,8 @@ func (proxy *DataSourceProxy) getDirector() func(req *http.Request) {
 		}
 		if proxy.ds.BasicAuth {
 			req.Header.Del("Authorization")
-			req.Header.Add("Authorization", util.GetBasicAuthHeader(proxy.ds.BasicAuthUser, proxy.ds.BasicAuthPassword))
+                        p, _ := util.Decrypt(proxy.ds.BasicAuthPassword, setting.SecretKey)
+			req.Header.Add("Authorization", util.GetBasicAuthHeader(proxy.ds.BasicAuthUser, string(p)))
 		}
 
 		// Lookup and use custom headers

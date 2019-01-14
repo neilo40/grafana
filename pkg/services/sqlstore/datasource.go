@@ -9,6 +9,8 @@ import (
 	"github.com/grafana/grafana/pkg/components/securejsondata"
 	"github.com/grafana/grafana/pkg/metrics"
 	m "github.com/grafana/grafana/pkg/models"
+	"github.com/grafana/grafana/pkg/setting"
+	"github.com/grafana/grafana/pkg/util"
 )
 
 func init() {
@@ -86,6 +88,11 @@ func DeleteDataSourceByName(cmd *m.DeleteDataSourceByNameCommand) error {
 	})
 }
 
+func encryptPassword(data string) []byte {
+	encryptedData, _ := util.Encrypt([]byte(data), setting.SecretKey)
+	return encryptedData
+}
+
 func AddDataSource(cmd *m.AddDataSourceCommand) error {
 	return inTransaction(func(sess *DBSession) error {
 		existing := m.DataSource{OrgId: cmd.OrgId, Name: cmd.Name}
@@ -107,7 +114,7 @@ func AddDataSource(cmd *m.AddDataSourceCommand) error {
 			IsDefault:         cmd.IsDefault,
 			BasicAuth:         cmd.BasicAuth,
 			BasicAuthUser:     cmd.BasicAuthUser,
-			BasicAuthPassword: cmd.BasicAuthPassword,
+			BasicAuthPassword: encryptPassword(cmd.BasicAuthPassword),
 			WithCredentials:   cmd.WithCredentials,
 			JsonData:          cmd.JsonData,
 			SecureJsonData:    securejsondata.GetEncryptedJsonData(cmd.SecureJsonData),
@@ -155,7 +162,7 @@ func UpdateDataSource(cmd *m.UpdateDataSourceCommand) error {
 			IsDefault:         cmd.IsDefault,
 			BasicAuth:         cmd.BasicAuth,
 			BasicAuthUser:     cmd.BasicAuthUser,
-			BasicAuthPassword: cmd.BasicAuthPassword,
+			BasicAuthPassword: encryptPassword(cmd.BasicAuthPassword),
 			WithCredentials:   cmd.WithCredentials,
 			JsonData:          cmd.JsonData,
 			SecureJsonData:    securejsondata.GetEncryptedJsonData(cmd.SecureJsonData),
